@@ -1,3 +1,5 @@
+import ast
+
 exercisePath = "exercises.txt"
 musclePath = "muscles.txt"
 relationPath = "exercises_muscles.txt"
@@ -32,25 +34,34 @@ def addExercise(name, musclesHit): # str, arr
     #Append to relation table.
     addDataToFile(relationPath, [exercise_idx, muscles_indices], "?")
 
-
 def exercisesForMuscle(muscle): #Takes a muscle and shows what exercises contain this muscle
     createFileAccess()
     relationsArr = getFileArr(relationPath, "?")
-    print(relationsArr)
+    relationsArrEvaluated = evaluateArray(relationsArr)
+
     muscle_idx = getIndexOf(muscle, musclePath, " ")
 
     exercisesUsingMuscle = []
-    for muscle in range(len(relationsArr)):
-        print(len(relationsArr[muscle]))
-        for i in range(len(relationsArr[muscle])):
-            if relationsArr[1][i] == muscle_idx:
-                exercise_idx = relationsArr[0]
-                exercisesUsingMuscle.append(getNameByIndex(exercise_idx))
-    print(exercisesUsingMuscle)
+    for relation in range(len(relationsArrEvaluated)):
+        for muscleUsed in range(len(relationsArrEvaluated[relation][1])):
+            if relationsArrEvaluated[relation][1][muscleUsed] == muscle_idx:
+                exerciseName = getNameByIndex(relationsArrEvaluated[relation][0], exercisePath, " ")
+                exercisesUsingMuscle.append(exerciseName)
+    print("Exercises using " + str(muscle) + ": " + str(exercisesUsingMuscle))
+        
+def musclesUsedInExercise(exercise):
+    createFileAccess()
+    relationsArr = getFileArr(relationPath, "?")
+    relationsArrEvaluated = evaluateArray(relationsArr)
 
-    
-
-    
+    exercise_idx = getIndexOf(exercise, exercisePath, " ")
+    musclesUsed = []
+    for relation in range(len(relationsArrEvaluated)):
+        if relationsArrEvaluated[relation][0] == exercise_idx:
+            for muscle in range(len(relationsArrEvaluated[relation][1])):
+                muscleName = getNameByIndex(relationsArrEvaluated[relation][1][muscle], musclePath, " ")
+                musclesUsed.append(muscleName)
+    print("You use " + str(musclesUsed) + " to perform " + str(exercise))
 
 def addDataToFile(path, data, seperator):
     f = open(path, "a+") #Append and read
@@ -93,6 +104,16 @@ def createFileAccess():
     musc_file = open(musclePath, "r")
     relation_file = open(relationPath, "a+")
 
-
-# addExercise("Butterfly", ["Chest"])
-exercisesForMuscle('Legs')
+def evaluateArray(array):
+    newArr = []
+    for i in range(len(array)):
+        try:
+            e = ast.literal_eval(array[i])
+            newArr.append(e)
+        except:
+            pass # Will catch the empty string
+    return newArr    
+        
+# addExercise("Deadlift", ["Legs", "Hamstrings", "Back"])
+# exercisesForMuscle('Back')
+musclesUsedInExercise("Deadlift")
