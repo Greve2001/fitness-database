@@ -1,1 +1,2 @@
 Make so that the inputter get capitalized before appending, and reading
+Ensure that everything is is lower case

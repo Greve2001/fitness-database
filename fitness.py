@@ -11,7 +11,7 @@ relationFile = None
 
 # Input options:
 input_options = [
-    "Add Exercise", "Find exercises by muscle", "Find muscles used by exercise"
+    "Add Exercise", "Find exercises by muscle", "Find muscles used by exercise", "Quit"
 ]
 
 
@@ -89,13 +89,14 @@ def musclesUsedInExercise(exercise):
         if relationsArrEvaluated[relation][0] == exercise_idx: # Checks forthe relation where the exercise index matches
             for muscle in range(len(relationsArrEvaluated[relation][1])):
                 muscle_idx = relationsArrEvaluated[relation][1][muscle] # Index of the muscle
-                muscleName.lower() = getNameByIndex(muscle_idx, musclePath, " ") # Gets muscle name by index
-                musclesUsed.append(muscleName.lower()) # Add to list of muscles used
+                muscleName = getNameByIndex(muscle_idx, musclePath, " ") # Gets muscle name by index
+                musclesUsed.append(muscleName) # Add to list of muscles used
     print("You use " + str(musclesUsed) + " to perform " + str(exercise))
 
 def addDataToFile(path, data, seperator):
     f = open(path, "a+") #Append and read
-    f.write(str(data.lower()) + seperator) # Writes data, to the open path, f
+
+    f.write(str(data) + seperator) # Writes data, to the open path, f
     print("Added " + str(data) + " to file: " + str(path))
 
 def getFileArr(path, seperator):
@@ -107,10 +108,12 @@ def getFileArr(path, seperator):
 def getIndexOf(value, path, seperator):
     arr = getFileArr(path, seperator=" ") # Get arr with newly added exercise
     if isinstance(value, str): # Checks for single value in form of a string
+        idx = None
         for i in range(len(arr)): # Loop through arr
-            if arr[i] == value.lower():
+            if arr[i] == value:
                 idx = i # Keep index that matches value
-        return idx
+        if idx is not None:
+            return idx  
     else:
         print("Error")
 def getIndicesOf(arr, path, seperator): # The path gets used to find an array.
@@ -120,7 +123,7 @@ def getIndicesOf(arr, path, seperator): # The path gets used to find an array.
         # Loops through both arrays and checks for matching values.
         for i in range(len(arr)):
             for j in range(len(pathArr)):
-                if arr[i].lower() == pathArr[j].lower():
+                if arr[i] == pathArr[j]:
                     indices.append(j) # Store indcies that have a matching value
         return indices
     else:
@@ -128,7 +131,7 @@ def getIndicesOf(arr, path, seperator): # The path gets used to find an array.
 
 def getNameByIndex(idx, path, seperator):
     arr = getFileArr(path, seperator) # Gets relevant list
-    return arr[idx].lower() # Returns the value at the index, therefor the name using this index
+    return arr[idx] # Returns the value at the index, therefor the name using this index
 
 def createFileAccess():
     exerciseFile = open(exercisePath, "a")
@@ -145,8 +148,7 @@ def evaluateArray(array):
             pass # Will catch the empty string
     return newArr    
 
-def listDiff(li1, li2):
-    return (list(list(set(li1)-set(li2)) + list(set(li2)-set(li1))))
+
 
 # Management of inputs and flow
 def startUp():
@@ -164,9 +166,11 @@ def takeInput():
         if int(optionsInput) >= 1 and int(optionsInput) <= len(input_options):
             processInput(int(optionsInput))
         else:
-            print("You need to enter a number presented in the options")
-    except:
-        print("You need to enter a number presented in the options")
+            print("1: You need to enter a number presented in the options")
+    except ValueError:
+        print("2: You need to enter a number presented in the options")
+    print("-----------------------------------------------------------")
+    takeInput()
 
 def processInput(optionsInput):
     if optionsInput == 1: #Add exercise
@@ -176,19 +180,19 @@ def processInput(optionsInput):
         musclesInput = input()
         muscles = musclesInput.split()
         addExercise(exerciseInput, muscles)
+        return
+
+    if optionsInput == 2: # Exercises by muscle
+        print("Type what muscle you want exercises for:")
+        muscleInput = input()
+        exercisesForMuscle(muscleInput)
         return 
 
-    if optionsInput == 2:
+    if optionsInput == 3: # Muscles by exercise
         return
 
-    if optionsInput == 3:
-        return
-
-
-
-
-
-
+    if optionsInput == 4: # Quit
+        quit()
 
 # addExercise("Crunch", ["Abs", "Core"])
 # exercisesForMuscle('Back')
