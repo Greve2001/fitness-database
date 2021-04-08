@@ -1,2 +1,3 @@
-Make so that the inputter get capitalized before appending, and reading
 Ensure that everything is is lower case
+
+Generally just make it so that the if the input of one value is in 2 words compress it, and a lot of other things

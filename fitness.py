@@ -11,7 +11,7 @@ relationFile = None
 
 # Input options:
 input_options = [
-    "Add Exercise", "Find exercises by muscle", "Find muscles used by exercise", "Quit"
+    "Add Exercise", "Find exercises by muscle", "Find muscles used by exercise", "Delete all data", "Quit program"
 ]
 
 
@@ -34,7 +34,6 @@ def addExercise(name, musclesHit): # str, arr
 
     #Check if muscles are added, if not add them
     muscleArr = getFileArr(musclePath, " ")
-    print("Muscle arr: " + str(muscleArr))
     musclesToAdd = []
     if muscleArr[0] == '':
         print("Nothing in array. Now adding all muscles recieved")
@@ -148,6 +147,16 @@ def evaluateArray(array):
             pass # Will catch the empty string
     return newArr    
 
+def cleanInput(input, inputType):
+    if inputType is "Single Word":
+        newInput = " ".join(input.split()).replace(" ", "-").lower()
+        print("Your input is stored as: " + str(newInput))
+        return newInput
+
+    if inputType is "Multiple Words":
+        newInput = " ".join(input.split()).lower()
+        print("Your input is stored as: " + str(newInput.replace(" ", ", ")))
+        return newInput
 
 
 # Management of inputs and flow
@@ -175,23 +184,26 @@ def takeInput():
 def processInput(optionsInput):
     if optionsInput == 1: #Add exercise
         print("Type what exercise you want to add.")
-        exerciseInput = input()
+        exerciseInput = cleanInput(input(), "Single Word")
         print("Now type the muscles activated by this exercise. Type every muscle with a space between.")
-        musclesInput = input()
+        musclesInput = cleanInput(input(), "Multiple Words")
         muscles = musclesInput.split()
         addExercise(exerciseInput, muscles)
         return
 
     if optionsInput == 2: # Exercises by muscle
         print("Type what muscle you want exercises for:")
-        muscleInput = input()
+        muscleInput = cleanInput(input(), "Single Word")
         exercisesForMuscle(muscleInput)
         return 
 
     if optionsInput == 3: # Muscles by exercise
         return
 
-    if optionsInput == 4: # Quit
+    if optionsInput == 4: # Delete all data
+        pass
+
+    if optionsInput == 5: # Quit
         quit()
 
 # addExercise("Crunch", ["Abs", "Core"])
