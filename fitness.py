@@ -36,7 +36,7 @@ def addExercise(name, musclesHit): # str, arr
     muscleArr = getFileArr(musclePath, " ")
     musclesToAdd = []
     if muscleArr[0] == '':
-        print("Nothing in array. Now adding all muscles recieved")
+        # print("Nothing in array. Now adding all muscles recieved")
         muscleArr = []
         for i in range(len(musclesHit)):
             addDataToFile(musclePath, musclesHit[i], " ")
@@ -96,7 +96,7 @@ def addDataToFile(path, data, seperator):
     f = open(path, "a+") #Append and read
 
     f.write(str(data) + seperator) # Writes data, to the open path, f
-    print("Added " + str(data) + " to file: " + str(path))
+    # print("Added " + str(data) + " to file: " + str(path))
 
 def getFileArr(path, seperator):
     file_obj = open(path, "r+") # Read and write
@@ -136,6 +136,16 @@ def createFileAccess():
     exerciseFile = open(exercisePath, "a")
     muscleFile = open(musclePath, "r")
     relationFile = open(relationPath, "a+")
+
+def deleteAllData():
+    arr = [
+        open(exercisePath, "w"), open(musclePath, "w"), open(relationPath, "w")
+    ]
+
+    for i in range(len(arr)):
+        arr[i].write("")
+
+    print("Deleted all data")
 
 def evaluateArray(array):
     newArr = []
@@ -198,9 +208,13 @@ def processInput(optionsInput):
         return 
 
     if optionsInput == 3: # Muscles by exercise
+        print("Type an exercise and see what muscles gets activated")
+        exerciseInput = cleanInput(input())
+        musclesUsedInExercise(exerciseInput)
         return
 
     if optionsInput == 4: # Delete all data
+        deleteAllData()
         pass
 
     if optionsInput == 5: # Quit
